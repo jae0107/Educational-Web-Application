@@ -1,0 +1,47 @@
+<% code = Code.find(@discussion.code_id) %>
+<% quiz = Quiz.find(code.quiz_id) %>
+<% course_user = CourseUser.find_by(uni_ID: current_user.username, course_id: quiz.course_id) %>
+<% team_id = course_user.team_id %>
+<br>
+<% i = 0%>
+<% code.all_correct_answer.count.times do %>
+<%= form_with(model: [ code, code.team_answers.build ], remote: true, class: 'form-inline') do |form| %>
+	<% i = i+1 %>
+		<%= i.to_s%> &nbsp;
+		<%= form.select :variable, code.correct_answers.order("variable").pluck(:variable, :variable).uniq, prompt: 'Choose variable' %>
+
+		<%= form.select :role, code.correct_answers.order("role").pluck(:role, :role).uniq, prompt: 'Choose variable role' %>
+
+		<%= form.hidden_field :team_id, :value => course_user.team_id%>
+	
+	<% if $comment_count == 0 %>
+		<%= form.button "Discuss before submission.", style: 'display: none;'%><br>
+	<% else %>
+		<%= form.submit "Submit Team Answer", :id=>"team_answer_"+i.to_s, style: 'display: none;'%><br>
+	<% end %>
+<% end %>
+<% end %>
+<br>
+<% if $comment_count == 0 %>
+	<button onclick="warning()">Discuss before submission.</button><br>
+<% else %>
+	<button onclick="submit_team()" style="color: #0080FF">Submit Team Answer</button><br>
+<% end %>
+
+<script type="text/javascript">
+	if (self.name != 'reload') {
+        self.name = 'reload';
+        self.location.reload(true);
+    }
+    else self.name = ''; 
+	function submit_team() {
+		for (var i = 1; i < 15; i++) {
+		    if (document.getElementById("team_answer_"+i.toString())!=null) {
+		   		document.getElementById("team_answer_"+i.toString()).click();
+		    } 
+	  	}
+	}
+	function warning(){
+		alert("Discuss first before submission");
+	}
+</script>

@@ -1,0 +1,5 @@
+<td><%= code.code %></td>
+<td><%= code.notes %></td>
+<td><%= button_tag link_to 'Edit', code_path(code) %>
+	<%= button_tag link_to 'Delete', [code.quiz, code], method: :delete, data: {confirm: 'Are you sure?'} %></td><br>
+<tr></tr>

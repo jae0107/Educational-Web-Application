@@ -1,0 +1,57 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+        	
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          	</button>
+          	<a class="navbar-brand" href="#">Collaborative Code Analysis Tool v0.1</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="/welcome/0?teacher=true">Home</a></li>
+            <li><a href="/courses">Course</a></li>
+            <li><a href="/var_roles?teacher=true">Variable Role</a></li>
+            <li class="active"><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	        <h1><strong>Course User Details:</strong></h1>
+			<table>
+				<table border ="1">
+				<tr>
+					<th>Uni ID</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Team ID</th>
+				</tr>
+				<td><%= @course_user.uni_ID %></td>
+				<td><%= @course_user.first_name %></td>
+				<td><%= @course_user.last_name %></td>
+				<td>
+          <% if @course_user.team_id.nil? %>
+          <%= 'Not assigned' %>
+          <% else %>          
+          <%= @course_user.team_id %>
+          <% end %>  
+          </td>
+				
+			</table>
+
+			<%= render 'edit_form' %>
+
+			<td><%= button_tag link_to 'Back', course_path(@course) %></td>
+        </div>
+    </div>
+</div>
+
+			
+
+

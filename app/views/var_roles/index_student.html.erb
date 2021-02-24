@@ -1,0 +1,53 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+        	
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          	</button>
+          	<a class="navbar-brand" href="#">Collaborative Code Analysis Tool v0.1</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="/welcome/0?student=true">Home</a></li>
+            <li><a href="/courses?take_quiz=true">Quiz</a></li>
+            <li><a href="/var_roles?student=true">Variable Roles</a></li>
+            <li class="active"><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	        <h1>Listing Variable Roles</h1>
+			<table style="width: 60%">
+				<table border ="1">
+				<tr>
+					<th style="width: 10%">Variable Role</th>
+					<th style="width: 35%">Description</th>
+					<!-- <th>Last Updated</th> -->
+					<th style="width: 15%">Action</th>
+				</tr>
+
+				<% @var_roles.each do |var_role| %>
+					<% quiz=Quiz.find_by_quiz_name(var_role.VarRole) %>
+					<tr>
+						<td><%= var_role.VarRole %></td>
+						<td><%= var_role.VarRoleDescription %></td>
+						<!-- <td><%= var_role.updated_at %></td> -->
+						<td><%= button_tag link_to 'Show Example', var_role_path(var_role, :student => true) %>
+						<%= button_tag link_to 'Review Quiz', "/quizzes/#{quiz.id}?take_quiz=true" %>
+					</tr>
+				<% end %>
+			</table>
+			<br>
+			<%= button_tag link_to 'Back', welcome_path(student: true, :id => '0') %>
+        </div>
+    </div>
+</div>
+
+			

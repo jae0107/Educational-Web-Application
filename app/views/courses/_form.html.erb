@@ -1,0 +1,28 @@
+<%= form_with(model: @course, local:true) do |form| %>
+  <% if @course.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@course.errors.count, "error") %> prohibited this course from being saved:
+      </h2>
+      <ul>
+        <% @course.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= form.label :course_code, 'Enter Course Code:' %><br>
+    <%= form.text_field :course_code, :maxlength=>20 %>
+  </p>
+
+  <p>
+    <%= form.label :course_name, 'Enter Course Name:' %><br>
+    <%= form.text_field :course_name, :maxlength=>80 %>
+  </p>
+ 
+  <p>
+    <%= form.submit 'Save Course' %>
+  </p>
+<% end %>

@@ -1,0 +1,269 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+			<div class="navbar-header">
+
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Collaborative Code Analysis Tool v0.1</a>
+			</div>
+	</div>
+</nav>
+
+<div class="container-fluid">
+<div class="row">
+	<div class="col-sm-3 col-md-2 sidebar">
+		<ul class="nav nav-sidebar">
+			<li class="active"><a href="/welcome/0?student=true">Home</a></li>
+			<li><a href="/courses?take_quiz=true">Quiz</a></li>
+			<li><a href="/var_roles?student=true">Variable Roles</a></li>
+			<li class="active"><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></li>
+		</ul>
+	</div>
+	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+		<% $current_course_id = @quiz.course_id %>
+		<h1><strong><%= @quiz.quiz_name %></strong></h1>
+		<%# <h2 class="page-header">Codes:</h2> %>
+		<div class="head d-flex justify-content-between mr-5 align-items-center">
+			<h2 class="page-header">Codes:</h2>
+			<div>
+				<% totalScore = 0 %>
+				<% @quiz.codes.each_with_index do |code, i| %>
+
+					<% for j in 0..100 %>
+						<% if code.correct_answers.pluck(:isCorrect)[j] == true %>
+							<% totalScore = 1 + totalScore %>
+						<% end %>
+					<% end %>
+				<% end %>
+				<% if $current_course_id != 0%>
+					<span class="mr-3">Total Score: <%= @quiz.total_scale %></span>
+					<span>Your Score: </span>
+					<span class="your-score"><%= StudentQuiz.where(quiz_id: @quiz.id, uni_id: current_user.username).order(:score).last&.score || 0 %></span>
+				<% end %>
+			</div>
+		</div>
+		<% qNum = 0 %>
+		<table class="" data-url="<%= submit_student_answers_path %>">
+			<thead>
+				<tr>
+					<th id="status"></th>
+					<th>Question</th>
+					<th>Code</th>
+					<th>Answer</th>
+					<th></th>
+					<th>Discussion</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% i = 0 %>
+				<% trueNum = 0 %>
+				<% @quiz.codes.each_with_index do |code, i| %>
+				<% student_answer_co = StudentAnswer.find_by(uni_id: "#{current_user.username}", code_id: code.id, score: 0) %>
+					<tr class="quiz_answer code-<%= i %>" data-code-id="<%= code.id %>" data-course-id="<%= @quiz.course_id %>">
+						<% qNum = qNum + 1 %>
+						<td id="answer-mark">
+								<td rowspan="2"><%= qNum %></td>
+								<td><%= code.notes %><%= "There are #{code.all_correct_answer.count} pairs of variables and roles." %><%= code.code %>
+									<br>
+									<% if student_answer_co.present? %>
+										<div class="" quiz-id="<%= @quiz.id %>">
+											<% if @quiz.answer_showtime == "4 Days After Deadline" %>
+												<% if @quiz.deadline+4.day <= Time.now  %>
+													Correct Answer: 
+													<table border ="1" style="border-color: antiquewhite;">
+														<tr>
+															<th>Variable</th>
+															<th>Role</th>
+														</tr>
+														<% code.all_correct_answer.each do |answer| %>
+														<tr>
+															<td><%= answer.variable %></td>
+															<td><%= answer.role %></td>
+														</tr>
+														<% end %>
+													</table>
+												<% end %>
+											<% end %>
+
+											<% if @quiz.answer_showtime == "After Deadline" %>
+												<% if @quiz.deadline <= Time.now  %>
+													Correct Answer: 
+													<table border ="1" style="border-color: antiquewhite;">
+														<tr>
+															<th>Variable</th>
+															<th>Role</th>
+														</tr>
+														<% code.all_correct_answer.each do |answer| %>
+														<tr>
+															<td><%= answer.variable %></td>
+															<td><%= answer.role %></td>
+														</tr>
+														<% end %>
+													</table>
+												<% end %>
+											<% end %>
+
+											<% if @quiz.answer_showtime == "Immediately After Submission" %>
+												Correct Answer: 
+												<table border ="1" style="border-color: antiquewhite;">
+													<tr>
+														<th>Variable</th>
+														<th>Role</th>
+													</tr>
+													<% code.all_correct_answer.each do |answer| %>
+													<tr>
+														<td><%= answer.variable %></td>
+														<td><%= answer.role %></td>
+													</tr>
+													<% end %>
+												</table>
+											<% end %>
+										<% else %>
+										<div class="feedback-status" quiz-id="<%= @quiz.id %>">
+											Correct Answer:
+											<table border ="1" style="border-color: antiquewhite;">
+												<tr>
+													<th>Variable</th>
+													<th>Role</th>
+												</tr>
+												<% code.all_correct_answer.each do |answer| %>
+												<tr>
+													<td><%= answer.variable %></td>
+													<td><%= answer.role %></td>
+												</tr>
+												<% end %>
+											</table>
+										<% end %>
+									</div>
+								</td>
+
+							<td rowspan="2" code-id="<%= code.id %>" course-id="<%= @quiz.course_id %>">
+								
+								<% student_answers = StudentAnswer.where(uni_id: "#{current_user.username}", code_id: code.id) %>
+									<% if student_answers.present?%>
+										<% student_answers.each do |student_answer| %>
+											<%= form_with(model: [ code, code.student_answers.build ], remote: true) do |form| %>
+
+												<%= form.select :variable, options_from_collection_for_select(code.correct_answers.uniq, :variable, :variable, "#{ student_answer.variable if student_answer.present? }"), prompt: 'Choose variable' %>
+												
+												<%= form.select :role, options_from_collection_for_select(code.correct_answers.uniq, :role, :role, "#{ student_answer.role if student_answer.present? }"), prompt: 'Choose variable role' %>
+												
+												<%= form.hidden_field :uni_id, value: current_user.username %>
+												<div class="code-status">
+													<% if student_answer.score == 1 %>
+														<div class="right">
+															<%= image_tag("Correct.bmp", :width => "120%", :align=> "right")%>
+														</div>
+													<% elsif student_answer.score == 0 %>
+														<div class="wrong">
+															<%= image_tag("Incorrect.bmp", :width => "120%", :align=> "right")%>
+														</div>
+													<% end %>
+													<div class="no-input hidden">
+														<%= image_tag("Missing.bmp", :width => "120%", :align=> "right")%>
+													</div>
+												</div>
+											<% end %>
+											<% if student_answer.score == 0 %>
+												<div quiz-id="<%= @quiz.id %>">
+													<div style="background-color: #eee;padding-left:10px;width: 300px;">Explanation:</div>
+													<% code.correct_answers.each do |correct_answer| %>
+														<div style="background-color: #eee;padding-left:10px;width: 300px;"><%= correct_answer.notes %></div>
+													<% end %>
+												</div>
+											<% end %>
+										<% end %>
+									<% else %>
+										<% i = 0 %>
+										<% code.all_correct_answer.count.times do %>
+											<%= form_with(model: [ code, code.student_answers.build ], remote: true) do |form| %>
+											<% i = i+1 %>
+											<div>
+											<%= i %>
+
+											<%= form.select :variable, code.correct_answers.order("variable").pluck(:variable, :variable).uniq, prompt: 'Choose variable' %>
+												<% if @quiz.quiz_name == "Fixed-value"%>
+												<%= form.select :role, ["Fixed-value"] %>
+												<% elsif @quiz.quiz_name == "Stepper"%>
+												<%= form.select :role, ["Stepper"] %>
+												<% elsif @quiz.quiz_name == "Most-recent-holder"%>
+												<%= form.select :role, ["Most-recent-holder"] %>
+												<% elsif @quiz.quiz_name == "Most-wanted-holder"%>
+												<%= form.select :role, ["Most-wanted-holder"] %>
+												<% elsif @quiz.quiz_name == "Gatherer"%>
+												<%= form.select :role, ["Gatherer"] %>
+												<% elsif @quiz.quiz_name == "Follower"%>
+												<%= form.select :role, ["Follower"] %>
+												<% elsif @quiz.quiz_name == "One-way-flag"%>
+												<%= form.select :role, ["One-way-flag"] %>
+												<% elsif @quiz.quiz_name == "Temporary"%>
+												<%= form.select :role, ["Temporary"] %>
+												<% else %>
+												<%= form.select :role, code.correct_answers.order("role").pluck(:role, :role).uniq, prompt: 'Choose variable role' %>
+												<% end %>
+												<%= form.hidden_field :uni_id, value: current_user.username %>
+											</div>
+												<div class="code-status">
+													<div class="right hidden">
+														<%= image_tag("Correct.bmp", :width => "120%", :align=> "right")%>
+													</div>
+													<div class="wrong hidden">
+														<%= image_tag("Incorrect.bmp", :width => "120%", :align=> "right")%>
+													</div>
+													<div class="no-input hidden">
+														<%= image_tag("Missing.bmp", :width => "120%", :align=> "right")%>
+													</div>
+												</div>
+											<%= form.submit "Save answer", :id => "answer"+qNum.to_s+"_"+i.to_s, style: 'display: none'%>
+											<!--<button id="answer" class="btn btn-success submit-answer" <%= StudentQuiz.where(quiz_id: @quiz.id, uni_id: current_user.username).present? ? 'disabled' : '' %>>Submit</button>-->
+											<% end %>
+										<% end %>
+									<% end %>
+								<%# end %>
+
+								<div class="feedback-status" quiz-id="<%= @quiz.id %>">
+									<div style="background-color: #eee;padding-left:10px;width: 300px;">Explanation:</div>
+									<% code.correct_answers.each do |correct_answer| %>
+										<div style="background-color: #eee;padding-left:10px;width: 300px;"><%= correct_answer.notes %></div>
+									<% end %>
+								</div>
+							</td>
+							<td></td>
+							<% if !@quiz.isIndividual %>
+							<td><%= button_tag link_to "Discuss", discussion_path(:take_quiz => true, :code_id => code.id) %></td>
+							<% else %>
+							<td><%= "Not Applicable" %></td>
+							<% end %>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<strong><em></em></strong>
+							<%= content_tag(:div, "", class: ["your-feedback"+qNum.to_s], style:["white-space: pre-line;"] )%>
+						</td>
+					</tr>
+				<% end %>
+				<% i = 0 %>
+			</tbody>
+		</table>
+		<div id="time" style="text-align: center;"></div><br>
+		<div class="actions d-flex justify-content-center">
+			<!--<button value="Submit" onclick="trigger()">Submit</button>-->
+		<% if @quiz.course_id == 0%>
+		<button onclick="refresh()">Try again</button>
+		<% end %>
+		<button class="btn btn-success submit-answer" <%= (StudentQuiz.where(quiz_id: @quiz.id, uni_id: current_user.username).present?) && (@quiz.course_id != 0) ? 'disabled' : '' %>>Submit</button>
+	</div>
+	</div>
+</div>
+</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+	function refresh(){
+		location.reload();
+	}
+</script>
+

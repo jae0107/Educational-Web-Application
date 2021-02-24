@@ -1,0 +1,38 @@
+<%= form_with(model: [ @course, @course.quizzes.build ], local:true) do |form| %>
+  <p>
+    <%= form.label :quiz_name, 'Please give a name to the quiz' %><br>
+    <%= form.text_field :quiz_name, :maxlength=>20 %>
+  </p>
+  <p>
+    <%= form.label 'Individual or Collaborative Quiz?' %>
+    <%= form.select("isIndividual",options_for_select([["Individual", 1 ], ["Individual + Collaborative", 0]]), {:include_blank => false})%>
+  </p>
+  <p>
+    <%= form.label :deadline, 'Deadline of the quiz (leave blank if there is no deadline)' %>
+      <div class="deadline">
+      <div class="form-inline">
+      <%= form.datetime_select :deadline, ampm: true, :include_blank => true, :default => nil %>
+      </div>
+      </div>
+  </p>
+   <!--<p>
+    <%= form.label :time_show_answer, 'When to show answers (leave blank if answers are to be shown upon students'' submission)' %>
+    <div class="form-inline">
+    <%= form.datetime_select :time_show_answer, ampm: true, :include_blank => true, selected: Date.today+4, :default => nil %>
+    </div>
+  </p> -->
+  <p>
+    <%= form.label :answer_showtime, 'When to show answers (leave blank if answers are to be shown upon students'' submission)' %>
+    <div class="form-inline">
+    <%= form.select :answer_showtime, options_for_select(["Immediately After Submission", "After Deadline", "4 Days After Deadline"], form.object&.answer_showtime || "4 Days After Deadline") %>
+    </div>
+  </p>
+
+  <p>
+   <!--<input type="button" style="color: #0080FF" onclick="blank()" value="Blank"></input>-->
+   <%= form.submit 'Save Quiz' %>
+  </p>
+
+<% end %>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<%= javascript_include_tag "blank", "data-turbolinks-track" => true %>

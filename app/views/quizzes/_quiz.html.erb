@@ -1,0 +1,23 @@
+<td><%= quiz.quiz_name %></td>
+<td><% if quiz.deadline.nil? %>
+	<%= 'No deadline' %>
+	<% else %>
+	<%= l quiz.deadline %>
+	<% end %>
+</td>
+<td><% if quiz.answer_showtime.nil? %>
+	<%= 'Immdediately After Submission' %>
+	<% else %>
+	<%= quiz.answer_showtime %>
+	<% end %>
+</td>
+<td><% if quiz.isIndividual %>
+	<%= 'Individual' %>
+	<% else %>
+	<%= 'Individual + Collaborative' %>
+	<% end %>
+</td>
+<td><%= l quiz.updated_at %></td>
+<td><%= button_tag link_to 'Edit', quiz_path(quiz) %>
+	<%= button_tag link_to 'Delete', [quiz.course, quiz], method: :delete, data: {confirm: 'Are you sure?'} %></td>
+<tr></tr>

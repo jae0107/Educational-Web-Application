@@ -1,0 +1,11 @@
+<%= form_with(model: [ @quiz, @quiz.codes.build ], local: true) do |form| %>
+  <p>
+    <%= form.label 'Enter code here:' %><br>
+    <%= form.rich_text_area :code, :cols=>80, :rows=>10 %><br>
+    <%= form.label 'Enter question:' %><br>
+    <%= form.rich_text_area :notes, :cols=>80, :rows=>5 %><br>
+    <%= form.submit "Save code"%>
+  </p>
+<% end %>
+
+<%= button_tag link_to 'Back', course_path(@quiz.course_id) %>
