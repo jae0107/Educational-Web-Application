@@ -1,0 +1,81 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          	</button>
+          	<a class="navbar-brand" href="#">Collaborative Code Analysis Tool v0.1</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="/welcome/0?teacher=true">Home</a></li>
+            <li><a href="/courses">Course</a></li>
+            <li><a href="/var_roles?teacher=true">Variable Role</a></li>
+            <li class="active"><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	        <h1><strong>Course Details:</strong></h1>
+			<p>
+				<strong>Course Code:</strong>
+				<%= @course.course_code %>
+			</p>
+
+			<p>
+				<strong>Course Name:</strong>
+				<%= @course.course_name %>
+			</p><br>
+
+			<h2>Added Users:</h2>
+			<table>
+				<table border ="1">
+				<tr>
+					<th>Uni ID</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Team ID</th>
+					<th>Action</th>
+				</tr>
+				<tr><%= render @course.course_users %></tr>
+			</table>
+
+			<h3>Add User</h3>
+			<%= render 'course_users/form' %>
+
+			<h3>Import User from File</h3>
+			<%= form_tag import_course_users_path(course_id: @course.id), local: true, multipart: true do %>
+			  <%= file_field_tag :file %>
+			  <%= submit_tag "Upload Users" %>
+			<% end %>
+
+			<h2>Saved Quizzes:</h2>
+			<table>
+				<table border ="1">
+				<tr>
+					<th>Quiz Name</th>
+					<th>Deadline</th>
+					<th>When To Show Answers</th>
+					<th>Individual or Collaborative</th>
+					<th>Last Updated</th>
+					<th>Action</th>
+				</tr>
+				<tr><%= render @course.quizzes %></tr>
+			</table><br>
+
+			<h3>Add Quiz</h3>
+			<%= render 'quizzes/form' %>
+
+			<%= button_tag link_to 'Edit', edit_course_path(@course) %>
+			<%= button_tag link_to 'Back', url_for(:back) %>
+        </div>
+    </div>
+</div>
+

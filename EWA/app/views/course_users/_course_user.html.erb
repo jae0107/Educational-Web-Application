@@ -1,0 +1,14 @@
+<td><%= course_user.uni_ID %></td>
+<td><%= course_user.first_name %></td>
+<td><%= course_user.last_name %></td>
+<td>
+<% if course_user.team_id.nil? %>
+<%= 'Not assigned' %>
+<% else %>             
+<%= course_user.team_id %>
+<% end %>  
+</td>
+<td><%= button_tag link_to 'Edit', [course_user.course, course_user] %>
+	<%= button_tag link_to 'Delete', [course_user.course, course_user], method: :delete, data: {confirm: 'Are you sure?'} %>
+</td>
+<tr></tr>

@@ -1,0 +1,13 @@
+<%= form_with(model: [ @code, @code.correct_answers.build ], local: true) do |form| %>
+	<p>
+		<%= form.label :variable %>
+		<%= form.text_field :variable %>
+		<%= form.label :role %>
+		<%= form.select("role",options_for_select(["Fixed-value", "Stepper", "Most-recent-holder", "Most-wanted-holder", "Gatherer", "Follower", "One-way-flag", "Temporary", "Others"]), {:include_blank => true})%>
+		<%= form.label 'Correct Answer?' %>
+		<%= form.select("isCorrect",options_for_select([["True", 1], ["False", 0]]), {:include_blank => false})%>
+		<%= form.label 'Enter notes or explanation' %>
+		<%= form.rich_text_area :notes, :cols=>80, :rows=>5 %>
+		<%= form.submit "Set Combination"%>
+	</p>
+<% end %>

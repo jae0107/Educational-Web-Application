@@ -1,0 +1,67 @@
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+     <div class="container-fluid"> 
+         <div class="navbar-header">
+        	
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          	</button>
+          	 <!--<a class="navbar-brand" href="#">Collaborative Code Analysis Tool v0.1</a>-->
+        </div> 
+     </div> 
+</nav>
+
+<div class="container-fluid">
+       <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <% if current_user %>
+              <% if current_user.username == '1000000' %>
+                <li class="active"> <%= link_to 'Teacher View', welcome_path(teacher: true, :id => '0') %></li>
+                <li><%= link_to 'Student View', welcome_path(student: true, :id => '0') %></li>
+              <% else %>
+                <li class="active"><%= link_to 'Enter', welcome_path(student: true, :id => '0') %></li>
+              <% end %>
+              <li class="active"><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></li>
+            <% else %>
+            <li class="active"><%= link_to 'Sign up', new_user_registration_path %></li>
+            <li><%= link_to 'Sign in', new_user_session_path %></li>
+            <% end %>
+          </ul>
+        </div>
+       	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> 
+	        <div class="whole"><center>
+					<%= image_tag("hello_world.png", :width => "60%", :align=> "middle")%>
+					<h1><strong><p style="font-family:verdana">Collaborative Code Analysis Tool v0.1</p></strong></h1>
+					 <div id='menu'>
+						<p style="display: none; font-family:verdana ">
+						<td><%= button_tag link_to 'Teachers', welcome_path(teacher: true, :id => '0') %></td>
+						<td><%= button_tag link_to 'Students', welcome_path(student: true, :id => '0') %></td></p>
+					</div> 
+				<p style="font-family:verdana">Team 37</p>
+        <!--<% if current_user %>
+          <% if current_user.username == '1000000' %>
+          <%= button_tag link_to 'Teacher View', welcome_path(teacher: true, :id => '0') %>
+          <%= button_tag link_to 'Student View', welcome_path(student: true, :id => '0') %>
+          <% else %>
+          <%= button_tag link_to 'Enter', welcome_path(student: true, :id => '0') %>
+          <% end %>
+        <%= button_tag link_to 'Sign out', destroy_user_session_path, method: :delete %>
+        <% else %>
+        <%= link_to 'Sign up', new_user_registration_path %>
+        <%= button_tag link_to 'Sign in', new_user_session_path %>
+        <% end %>-->
+			</center></div>
+
+				<!-- <nav>
+				  <ul class="menu" style="display: none;">
+				    <li><a href="/welcome/0?teacher=true">Teachers</a></li>
+				    <li><a href="/welcome/0?student=true">'Students</a></li>
+				  </ul>
+				</nav> -->
+		</div>
+    </div>
+</div>
+			

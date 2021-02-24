@@ -1,0 +1,7 @@
+<%= form_with(model: [ @course, @course.course_users.build ], local: true) do |form| %>
+	<p>
+		<%= form.label :uni_ID %>
+		<%= form.text_field :uni_ID %>
+		<%= form.submit "Add User"%>
+	</p>
+<% end %>
