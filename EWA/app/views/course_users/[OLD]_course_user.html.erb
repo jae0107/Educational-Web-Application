@@ -1,6 +1,0 @@
-<td><%= course_user.uni_ID %></td>
-<td><%= User.find_by_sql(["SELECT * FROM users WHERE uni_ID = ?", course_user.uni_ID]).first.try(:first_name) %>
-	<%= User.find_by_sql(["SELECT * FROM users WHERE uni_ID = ?", course_user.uni_ID]).first.try(:last_name) %>
-</td>
-<td><%= button_tag link_to 'Delete', [course_user.course, course_user], method: :delete, data: {confirm: 'Are you sure?'} %></td>
-<tr></tr>
