@@ -54,7 +54,6 @@
 					<th>Code</th>
 					<th>Answer</th>
 					<th></th>
-					<th>Discussion</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -232,11 +231,6 @@
 								</div>
 							</td>
 							<td></td>
-							<% if !@quiz.isIndividual %>
-							<td><%= button_tag link_to "Discuss", discussion_path(:take_quiz => true, :code_id => code.id) %></td>
-							<% else %>
-							<td><%= "Not Applicable" %></td>
-							<% end %>
 						</td>
 					</tr>
 					<tr>
