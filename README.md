@@ -1,6 +1,6 @@
 # Educational Web Application
 
-This is an education web application, especially for coding begginers. There are two views: teacher view and student view. Teachers can access both views, while students can only access the student view.
+This is an education web application, especially for coding beginners. I was developed in Ruby on Rails. There are two views: teacher view and student view. Teachers can access both views, while students can only access the student view.
 
 Teachers can create courses, quizzes and examples, and they can add students to courses.
 
